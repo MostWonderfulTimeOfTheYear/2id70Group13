@@ -1,13 +1,19 @@
--- ATTENTION: Remove the comments and the example before submitting
--- This file should contain exactly 8 lines, without any comment. Each line will correspond to one of the 8 sub-questions of question 2.
--- Do not break long queries to more than one line, and do not leave empty lines between them. 
--- If you do not know the answer to one of the sub-questions, then write SELECT 0;
--- Example: Let's say I only know sub-question 3:
-SELECT 0;
-SELECT 0;
-SELECT phonenumber from myphonebook where name=%1%; 
-SELECT 0;
-SELECT 0;
-SELECT 0;
-SELECT 0;
-SELECT 0;
+-- q1:
+
+-- q2:
+
+-- q3:
+
+-- q4:
+--EXPLAIN ANALYZE 
+WITH StudentsInDegree AS (SELECT st.StudentId, st.Gender FROM Students AS st, StudentRegistrationsToDegrees AS st2deg, Degrees AS deg WHERE st2deg.DegreeId=deg.DegreeId AND st.StudentId=st2deg.StudentId AND deg.Dept='thou shalt'),
+GenderPercentage AS (SELECT Gender, (100 * COUNT(*) / sum(COUNT(*)) OVER()) AS Percentage FROM StudentsInDegree GROUP BY Gender)
+SELECT Percentage FROM GenderPercentage WHERE Gender='F';
+
+-- q5:
+
+-- q6:
+
+-- q7:
+
+-- q8:
