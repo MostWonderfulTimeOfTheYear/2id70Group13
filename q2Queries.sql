@@ -1,3 +1,6 @@
+-- remove all comments before submitting
+-- and have each query on 1 line
+
 -- q1:
 
 -- q2:
