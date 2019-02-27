@@ -26,8 +26,10 @@
 
 -- q6:
 
+--EXPLAIN ANALYZE 
 --WITH 
---ExcellentStudents AS (SELECT st2deg.StudentId, COUNT(st2deg.StudentId) AS numberOfCoursesWhereExcellent FROM CourseRegistrations AS cr CourseOffers AS co, StudentRegistrationsToDegrees AS st2deg WHERE co.CourseOfferId=cr.CourseOfferId AND Quartile=1 AND Year=2018 AND cr.StudentRegistrationId=st2deg.StudentRegistrationId GROUP BY cr.CourseOfferId HAVING cr.Grade=MAX(cr.Grade) GROUP BY st2deg.StudentId)
+--HighestGradeCourseOffers AS (SELECT cr.CourseOfferId, Max(Grade) AS highestGrade FROM CourseRegistrations AS cr, CourseOffers AS co WHERE co.CourseOfferId=cr.CourseOfferId AND co.Quartile=1 AND co.Year=2018 GROUP BY cr.CourseOfferId),
+--ExcellentStudents AS (SELECT st2deg.StudentId, COUNT(st2deg.StudentId) AS numberOfCoursesWhereExcellent FROM HighestGradeCourseOffers AS gco, StudentRegistrationsToDegrees AS st2deg, CourseRegistrations AS cr WHERE gco.CourseOfferId=cr.CourseOfferId AND cr.StudentRegistrationId=st2deg.StudentRegistrationId AND cr.Grade=gco.highestGrade GROUP BY st2deg.StudentId)
 --SELECT StudentId, numberOfCoursesWhereExcellent FROM ExcellentStudents WHERE numberOfCoursesWhereExcellent >= 2;
 
 -- q7:
