@@ -90,5 +90,6 @@ SELECT c.courseName, co.year, co.quartile
                 SELECT COUNT(cr.StudentRegistrationId) 
                     FROM CourseRegistrations AS cr 
                         WHERE cr.CourseOfferId=co.CourseOfferId and co.courseId = c.courseId
-                )/50;
+                )/50
+                ORDER BY co.courseOfferId;
 */
