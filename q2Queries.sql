@@ -1,13 +1,10 @@
-SELECT DISTINCT (studentid)
-FROM excellentStudents
-WHERE excellentStudents.gpa >=%1%
-ORDER BY studentid;
-
-<<<<<<< HEAD
-=======
 -- q1:
 
 -- q2:
+SELECT DISTINCT (studentid)
+    FROM excellentStudents
+        WHERE excellentStudents.gpa >=%1%
+            ORDER BY studentid;
 
 -- q3:
 
@@ -86,4 +83,3 @@ SELECT c.courseName, co.year, co.quartile
                 )/50
                 ORDER BY co.courseOfferId;
 */
->>>>>>> f958086331fd5434a9efa531a5801964f7fa48e1
