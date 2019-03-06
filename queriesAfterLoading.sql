@@ -1,4 +1,4 @@
 -- here you will write the three queries requested in Question 1. Each query should be in a single line, i.e., do not break long queries to more lines.
-SELECT 'Replace this line with query 1';
-SELECT 'Replace this line with query 2';
-SELECT 'Replace this line with query 3';
+SELECT co.CourseOfferId, c.CourseId, co.Year, co.Quartile, c.CourseName, c.CourseDescription, d.DegreeId, c.ECTS, d.Dept, d.DegreeDescription, d.TotalECTS, t.TeacherId, t.TeacherName, t.Address, t.BirthyearTeacher, t.Gender FROM courseOffers As co, Teachers AS t, Courses AS c, Degrees AS d, TeacherAssignmentsToCourses AS tatc WHERE co.courseOfferId = 1 AND co.CourseId = c.CourseId AND tatc.CourseOfferId = co.CourseOfferId AND tatc.TeacherId = t.TeacherId AND c.DegreeID = d.DegreeId;
+SELECT co.CourseOfferId, co.CourseId, co.Year, co.Quartile, s.StudentId, s.StudentName, s.Address, s.BirthyearStudent, s.Gender, d.DegreeId, d.Dept, d.DegreeDescription, d.TotalECTS FROM CourseOffers AS co, Degrees AS d, Students AS s, StudentAssistants AS sa, StudentRegistrationsToDegrees AS srtd WHERE srtd.StudentRegistrationId= 140 AND sa.StudentRegistrationId = srtd.StudentRegistrationId AND s.StudentId = srtd.StudentId AND srtd.DegreeId = d.DegreeId AND co.CourseOfferId = sa.CourseofferId;
+SELECT AVG(cr.grade) FROM courseRegistrations AS cr WHERE cr.studentRegistrationid = 140;

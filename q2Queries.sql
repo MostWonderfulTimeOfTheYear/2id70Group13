@@ -16,7 +16,7 @@ WITH
     StudentsInDegree AS (
         SELECT st.StudentId, st.Gender 
             FROM Students AS st, StudentRegistrationsToDegrees AS st2deg, Degrees AS deg 
-                WHERE st2deg.DegreeId=deg.DegreeId AND st.StudentId=st2deg.StudentId AND deg.Dept='thou shalt'
+                WHERE st2deg.DegreeId=deg.DegreeId AND st.StudentId=st2deg.StudentId AND deg.Dept=%1%
     )
 SELECT (100. * COUNT(*) / (SELECT COUNT(*) FROM StudentsInDegree)) AS percentage 
     FROM StudentsInDegree 
@@ -25,29 +25,33 @@ SELECT (100. * COUNT(*) / (SELECT COUNT(*) FROM StudentsInDegree)) AS percentage
 DROP INDEX idx_studentToDegree;
 */
 -- q5:
+--CREATE INDEX idx_Grade ON CourseOffers(CourseOfferId, CourseId);
+
 /*
 EXPLAIN ANALYZE 
 WITH 
-    CourseOfferGradesTotal AS (
-        SELECT cr.CourseOfferId, COUNT(cr.CourseOfferId) AS Total 
-            FROM CourseRegistrations as cr 
-                WHERE cr.Grade < 8 
-                    GROUP BY cr.CourseOfferId
+    CourseOfferGradesBelow AS (
+        SELECT co.CourseId, COUNT(co.CourseId) AS Below 
+            FROM CourseRegistrations as cr, CourseOffers as co
+                WHERE cr.Grade < 8 AND co.CourseOfferId=cr.CourseOfferId
+                    GROUP BY co.CourseId
     ),
     CourseOfferGradesAbove AS (
-        SELECT cr.CourseOfferId, COUNT(cr.CourseOfferId) AS Above 
-            FROM CourseRegistrations as cr 
-                WHERE cr.Grade >= 8 
-                    GROUP BY cr.CourseOfferId
+        SELECT co.CourseId, COUNT(co.CourseId) AS Above 
+            FROM CourseRegistrations as cr, CourseOffers as co
+                WHERE cr.Grade >= 8 AND co.CourseOfferId=cr.CourseOfferId
+                    GROUP BY co.CourseId
     )
-SELECT cogt.CourseOfferId, (100. * (coga.Above) / (cogt.Total + coga.Above)) as percentagePassing 
-    FROM CourseOfferGradesTotal AS cogt, CourseOfferGradesAbove coga 
-        WHERE cogt.CourseOfferId=coga.CourseOfferId 
-            GROUP BY cogt.CourseOfferId, coga.Above, cogt.Total 
-                ORDER BY cogt.CourseOfferId;
+SELECT cogb.CourseId, (100. * (coga.Above) / (cogb.Below + coga.Above)) as percentagePassing 
+    FROM CourseOfferGradesBelow AS cogb, CourseOfferGradesAbove coga
+        WHERE cogb.CourseId=coga.CourseId
+            GROUP BY cogb.CourseId, coga.Above, cogb.Below 
+                ORDER BY cogb.CourseId;
 */
--- q6:
 
+--DROP INDEX idx_Grade;
+-- q6:
+/*
 EXPLAIN ANALYZE 
 WITH 
     HighestGradeCourseOffers AS (
@@ -65,7 +69,26 @@ WITH
 SELECT StudentId, numberOfCoursesWhereExcellent 
     FROM ExcellentStudents 
         WHERE numberOfCoursesWhereExcellent >= 2;
-
+*/
 -- q7:
 
+SELECT deg.DegreeId, st.BirthyearStudent, st.Gender, AVG(cr.Grade) 
+    FROM Degrees AS deg, Students AS st, CourseRegistrations AS cr, StudentRegistrationsToDegrees AS st2deg 
+        WHERE st2deg.StudentId=st.StudentId AND st2deg.StudentRegistrationId=cr.StudentRegistrationId AND st2deg.DegreeId=deg.DegreeId 
+            GROUP BY CUBE (deg.DegreeId, st.BirthyearStudent, st.Gender);
+
 -- q8:
+/*
+SELECT c.courseName, co.year, co.quartile 
+    FROM courses AS c, courseOffers AS co 
+        WHERE c.courseId = co.CourseId AND 
+            (
+                SELECT COUNT(sa.StudentRegistrationId) 
+                    FROM StudentAssistants AS sa 
+                        WHERE co.courseOfferId = sa.CourseOfferId AND co.CourseId = c.CourseId
+            ) < (
+                SELECT COUNT(cr.StudentRegistrationId) 
+                    FROM CourseRegistrations AS cr 
+                        WHERE cr.CourseOfferId=co.CourseOfferId and co.courseId = c.courseId
+                )/50;
+*/
