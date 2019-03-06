@@ -61,3 +61,10 @@ CREATE MATERIALIZED VIEW ExcellentCourseStudents(StudentId, NumberOfCoursesWhere
         FROM HighestGradeCourseOffers AS gco, StudentRegistrationsToDegrees AS st2deg, CourseRegistrations AS cr 
             WHERE gco.CourseOfferId=cr.CourseOfferId AND cr.StudentRegistrationId=st2deg.StudentRegistrationId AND cr.Grade=gco.highestGrade 
                 GROUP BY st2deg.StudentId;
+
+-- q7:
+CREATE MATERIALIZED VIEW maxGrades(studentid, degreeid, courseid, maxgrade, ect) AS (
+    SELECT srtd.studentid, co.courseid, max(cr.grade), c.ects
+        FROM studentRegistrationstoDegrees AS srtd, CourseRegistrations AS cr, courses AS c, courseoffers AS co 
+            WHERE srtd.studentRegistrationId = cr.studentRegistrationId AND co.courseOfferId=cr.courseOfferId AND c.courseId = co.courseId
+                GROUP BY srtd.studentid, srtd.degreeId, co.courseId, c.ects;

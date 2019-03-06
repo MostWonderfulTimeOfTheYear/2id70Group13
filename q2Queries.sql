@@ -14,7 +14,7 @@ ORDER BY courseoffers.year, courseoffers.quartile,courseoffers.courseofferid;
 
 SELECT DISTINCT (studentid)
     FROM excellentStudents
-        WHERE excellentStudents.gpa >=9.1
+        WHERE excellentStudents.gpa >=%1%
             ORDER BY studentid;
 
 -- q3:
@@ -75,10 +75,10 @@ SELECT StudentId, numberOfCoursesWhereExcellent
 
 -- q7:
 
-SELECT deg.DegreeId, st.BirthyearStudent, st.Gender, AVG(cr.Grade) 
-    FROM Degrees AS deg, Students AS st, CourseRegistrations AS cr, StudentRegistrationsToDegrees AS st2deg 
-        WHERE st2deg.StudentId=st.StudentId AND st2deg.StudentRegistrationId=cr.StudentRegistrationId AND st2deg.DegreeId=deg.DegreeId 
-            GROUP BY CUBE (deg.DegreeId, st.BirthyearStudent, st.Gender);
+SELECT deg.DegreeId, st.BirthyearStudent, st.Gender, CAST (mg.maxgrade * mg.ect AS FLOAT)/CAST(SUM(mg.ect) AS FLOAT) AS avgGrade
+    FROM maxGrades AS mg, Degrees AS deg, Students AS st, CourseRegistrations AS cr, StudentRegistrationsToDegrees AS st2deg 
+        WHERE st2deg.StudentId=st.StudentId AND st2deg.StudentRegistrationId=cr.StudentRegistrationId AND st2deg.DegreeId=deg.DegreeId
+             GROUP BY CUBE (deg.DegreeId, st.BirthyearStudent, st.Gender);
 
 -- q8:
 
