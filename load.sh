@@ -4,5 +4,7 @@
 # Expected size of tables after loading should be below 8 GB
 # The total disk space available for storing all data, views, indices, and the write-ahead-log (also see UNLOGGED keyword) is 12 GB
 
-psql -d uni -f createTables.sql
-psql -d uni -f loadData.sql
+# remove '-U=postgres' before submitting
+
+psql -d uni -f createTables.sql -U postgres
+psql -d uni -f loadData2.sql -U postgres
