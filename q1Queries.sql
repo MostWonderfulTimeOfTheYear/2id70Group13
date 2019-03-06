@@ -7,3 +7,4 @@ SELECT courses.coursename, studentGrades.grade
 FROM studentGrades, courses, courseoffers
 WHERE courseoffers.courseid=courses.courseid AND courseoffers.courseofferid=studentGrades.courseofferid 
 ORDER BY courseoffers.year, courseoffers.quartile,courseoffers.courseofferid;
+

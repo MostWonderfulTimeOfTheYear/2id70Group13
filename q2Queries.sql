@@ -1,6 +1,10 @@
--- remove all comments before submitting
--- and have each query on 1 line
+SELECT DISTINCT (studentid)
+FROM excellentStudents
+WHERE excellentStudents.gpa >=%1%
+ORDER BY studentid;
 
+<<<<<<< HEAD
+=======
 -- q1:
 
 -- q2:
@@ -79,5 +83,7 @@ SELECT c.courseName, co.year, co.quartile
                 SELECT COUNT(cr.StudentRegistrationId) 
                     FROM CourseRegistrations AS cr 
                         WHERE cr.CourseOfferId=co.CourseOfferId and co.courseId = c.courseId
-                )/50;
+                )/50
+                ORDER BY co.courseOfferId;
 */
+>>>>>>> f958086331fd5434a9efa531a5801964f7fa48e1
