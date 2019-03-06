@@ -1,7 +1,26 @@
--- this file should contain the code required to create the auxiliary structures, for query 2
--- this file will be given 10 minutes to run. Then it will be killed
--- The file will be invoked with timeout 10m psql -d uni -f q2Create.sql
--- Remember that the database (including the auxiliary structures) needs to be less than 11 GB.
--- This file will be executed with postgres -d uni -f q2Create.sql 
--- Example:
-CREATE INDEX IDX_PHONEBOOK ON MyPhonebook(name);
+CREATE MATERIALIZED VIEW excellentStudents(studentid,gpa) AS
+	With noFailure(studentid,degreeid) AS(
+			SELECT studentregistrationstodegrees.studentid,studentregistrationstodegrees.degreeid
+			FROM studentregistrationstodegrees,courseregistrations
+			WHERE studentregistrationstodegrees.studentregistrationid=courseregistrations.studentregistrationid
+			GROUP BY studentregistrationstodegrees.studentid, studentregistrationstodegrees.degreeid
+			HAVING MIN(courseregistrations.grade)>=5),
+	maxGrade(studentid,degreeid,courseid,maxgrade,ect) AS(
+			SELECT studentregistrationstodegrees.studentid,studentregistrationstodegrees.degreeid,courseoffers.courseid,max(courseregistrations.grade),courses.ects
+			FROM studentregistrationstodegrees,courseregistrations,courses,courseoffers
+			WHERE studentregistrationstodegrees.studentregistrationid=courseregistrations.studentregistrationid AND
+			  courseoffers.courseofferid=courseregistrations.courseofferid AND courses.courseid=courseoffers.courseid AND 
+			  (studentregistrationstodegrees.studentid, studentregistrationstodegrees.degreeid) IN (SELECT studentid,degreeid
+										FROM noFailure)
+			GROUP BY studentregistrationstodegrees.studentid, studentregistrationstodegrees.degreeid,courseoffers.courseid,courses.ects),
+	nerdyStudents(studentid,degreeid,weightedtotalgrades,totalects) AS(
+	SELECT studentid,degreeid, SUM (maxgrade*ect) AS weightedtotalgrades, SUM (ect) AS totalects
+	FROM maxGrade
+	GROUP BY studentid, degreeid), 	
+	studentsGpa(studentid,GPA) AS(
+	SELECT nerdyStudents.studentid,CAST (nerdyStudents.weightedtotalgrades AS FLOAT)/CAST(nerdyStudents.totalects AS FLOAT) as GPA
+	FROM nerdyStudents, degrees
+	WHERE nerdyStudents.degreeid=degrees.degreeid AND nerdyStudents.totalects>=degrees.totalects)
+	SELECT studentid,GPA
+	FROM studentsGpa
+	WHERE GPA BETWEEN 9 AND 10;
