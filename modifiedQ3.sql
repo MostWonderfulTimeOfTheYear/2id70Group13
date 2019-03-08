@@ -19,7 +19,7 @@ totalFemaleStudents(degreeid,totalFemale) AS(
 	FROM students,activeStudents
 	WHERE students.studentid=activeStudents.studentid AND students.gender='F'
 	GROUP BY degreeid)
-SELECT totalStudents.degreeiD,CAST(totalFemaleStudents.totalFemale AS FLOAT)/CAST(totalStudents.total AS FLOAT) AS ratio
+SELECT totalStudents.degreeiD,CAST(totalFemaleStudents.totalFemale AS FLOAT)/CAST(totalStudents.total AS FLOAT) * 100.0 AS ratio
 FROM totalStudents,totalFemaleStudents
 WHERE totalStudents.degreeid=totalFemaleStudents.degreeid
 ORDER BY totalStudents.degreeiD
